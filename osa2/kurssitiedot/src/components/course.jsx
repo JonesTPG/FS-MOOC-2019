@@ -4,6 +4,12 @@ import Content from "./content";
 import Total from "./total";
 
 const Course = ({ course }) => {
+  let totalExercises = course.parts.reduce(
+    (accumulator, part) => accumulator + part.exercises,
+    0
+  );
+  console.log(totalExercises);
+
   return (
     <>
       <div>
@@ -11,13 +17,7 @@ const Course = ({ course }) => {
 
         <Content contents={course.parts} />
 
-        <Total
-          total={
-            course.parts[0].exercises +
-            course.parts[1].exercises +
-            course.parts[2].exercises
-          }
-        />
+        <Total count={totalExercises} />
       </div>
     </>
   );

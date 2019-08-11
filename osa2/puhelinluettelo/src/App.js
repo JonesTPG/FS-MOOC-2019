@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Filter from "./components/filter";
+import Persons from "./components/persons";
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -35,13 +36,6 @@ const App = () => {
     setNewNumber(event.target.value);
   };
 
-  const items = () =>
-    persons.map(person => (
-      <p key={person.name}>
-        {person.name} {person.number}
-      </p>
-    ));
-
   return (
     <div>
       <h2>Phonebook</h2>
@@ -60,7 +54,7 @@ const App = () => {
         </div>
       </form>
       <h2>Numbers</h2>
-      {items()}
+      <Persons dataList={persons} filter={filter} />
     </div>
   );
 };

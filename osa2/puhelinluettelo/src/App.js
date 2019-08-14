@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Filter from "./components/filter";
 import Persons from "./components/persons";
+import Notification from "./components/notification";
+import Error from "./components/error";
 import PersonService from "./services/persons";
 
 const App = () => {
@@ -8,6 +10,8 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [filter, setFilter] = useState("");
+  const [notification, setNotification] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null);
 
   useEffect(() => {
     PersonService.getAll().then(persons => {
@@ -22,7 +26,10 @@ const App = () => {
     if (confirmed === true) {
       PersonService.deletePerson(id).then(deletedPerson => {
         setPersons(persons.filter(person => person.id !== id));
-        console.log("person deleted: " + deletedPerson);
+        setNotification("Deleted " + personToBeDeleted.name);
+        setTimeout(() => {
+          setNotification(null);
+        }, 3000);
       });
     }
   };
@@ -37,15 +44,28 @@ const App = () => {
 
       if (confirmed === true) {
         const changedPerson = { ...person, number: newNumber };
-        PersonService.update(changedPerson.id, changedPerson).then(
-          returnedPerson => {
+        PersonService.update(changedPerson.id, changedPerson)
+          .then(returnedPerson => {
             setPersons(
               persons.map(person =>
                 person.id !== returnedPerson.id ? person : returnedPerson
               )
             );
-          }
-        );
+            setNotification("Updated " + returnedPerson.name);
+            setTimeout(() => {
+              setNotification(null);
+            }, 3000);
+          })
+          .catch(error => {
+            setErrorMessage(
+              "Information of " +
+                changedPerson.name +
+                " has already been removed from server"
+            );
+            setTimeout(() => {
+              setErrorMessage(null);
+            }, 3000);
+          });
       }
 
       setNewName("");
@@ -56,6 +76,10 @@ const App = () => {
     PersonService.create({ name: newName, number: newNumber }).then(
       returnedPerson => {
         setPersons(persons.concat(returnedPerson));
+        setNotification("Created " + returnedPerson.name);
+        setTimeout(() => {
+          setNotification(null);
+        }, 3000);
       }
     );
     setNewName("");
@@ -77,6 +101,9 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+
+      <Notification message={notification} />
+      <Error message={errorMessage} />
 
       <Filter filterToApp={filterToApp} />
 

@@ -4,6 +4,7 @@ import Persons from "./components/persons";
 import Notification from "./components/notification";
 import Error from "./components/error";
 import PersonService from "./services/persons";
+import ValidationService from "./services/validations";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -36,6 +37,15 @@ const App = () => {
 
   const addItem = event => {
     event.preventDefault();
+
+    if (!ValidationService.validatePerson(newName, newNumber)) {
+      setErrorMessage("Name or number empty.");
+      setTimeout(() => {
+        setErrorMessage(null);
+      }, 3000);
+      return;
+    }
+
     let person = persons.find(person => person.name === newName);
     if (person !== undefined) {
       let confirmed = window.confirm(
@@ -73,15 +83,20 @@ const App = () => {
       return;
     }
 
-    PersonService.create({ name: newName, number: newNumber }).then(
-      returnedPerson => {
+    PersonService.create({ name: newName, number: newNumber })
+      .then(returnedPerson => {
         setPersons(persons.concat(returnedPerson));
         setNotification("Created " + returnedPerson.name);
         setTimeout(() => {
           setNotification(null);
         }, 3000);
-      }
-    );
+      })
+      .catch(error => {
+        setErrorMessage(error.response.data.error);
+        setTimeout(() => {
+          setErrorMessage(null);
+        }, 3000);
+      });
     setNewName("");
     setNewNumber("");
   };

@@ -16,7 +16,7 @@ const CreateBlog = ({ update }) => {
       url: url
     };
 
-    blogService.create(newBlog);
+    await blogService.create(newBlog);
     update(newBlog);
   };
 

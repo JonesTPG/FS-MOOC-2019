@@ -27,7 +27,7 @@ const Blog = ({ blog, update, loggedInUser }) => {
       id: blog.id
     };
 
-    let response = await blogService.update(updatedBlog);
+    await blogService.update(updatedBlog);
     setLikes(likes + 1);
   };
 
@@ -54,10 +54,10 @@ const Blog = ({ blog, update, loggedInUser }) => {
 
           <p> user id: {blog.user.id}</p>
           <p> logged in user id: {loggedInUser}</p>
-          {blog.user.id == loggedInUser ? (
+          {blog.user.id === loggedInUser ? (
             <button onClick={handleClick2}>remove</button>
           ) : (
-            <p>you don't own this blog.</p>
+            <p>you dont own this blog.</p>
           )}
         </div>
       ) : (

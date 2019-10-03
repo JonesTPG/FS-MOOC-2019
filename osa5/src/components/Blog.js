@@ -1,7 +1,8 @@
 import React from "react";
 import { useState } from "react";
+import blogService from "../services/blogs";
 
-const Blog = ({ blog }) => {
+const Blog = ({ blog, update, loggedInUser }) => {
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -11,26 +12,57 @@ const Blog = ({ blog }) => {
   };
 
   const [showDetails, setShowDetails] = useState(false);
+  const [likes, setLikes] = useState(blog.likes);
 
   const toggleDetails = () => {
     setShowDetails(!showDetails);
+  };
+
+  const handleClick = async () => {
+    const updatedBlog = {
+      author: blog.author,
+      title: blog.title,
+      url: blog.url,
+      likes: likes + 1,
+      id: blog.id
+    };
+
+    let response = await blogService.update(updatedBlog);
+    setLikes(likes + 1);
+  };
+
+  const handleClick2 = async () => {
+    let confirmed = window.confirm("Delete " + blog.title + "?");
+
+    if (confirmed === true) {
+      await blogService.remove(blog.id);
+      update();
+    }
   };
 
   return (
     <div style={blogStyle}>
       <div onClick={() => toggleDetails()}>
         {blog.title} {blog.author}
-        {showDetails ? (
-          <div>
-            <p>{blog.url}</p>
-            <p>{blog.likes}</p>
-            <button>like</button>
-            <p>added by {blog.user.name}</p>
-          </div>
-        ) : (
-          <></>
-        )}
       </div>
+      {showDetails ? (
+        <div>
+          <p>{blog.url}</p>
+          <p>{likes}</p>
+          <button onClick={handleClick}>like</button>
+          <p>added by {blog.user.name}</p>
+
+          <p> user id: {blog.user.id}</p>
+          <p> logged in user id: {loggedInUser}</p>
+          {blog.user.id == loggedInUser ? (
+            <button onClick={handleClick2}>remove</button>
+          ) : (
+            <p>you don't own this blog.</p>
+          )}
+        </div>
+      ) : (
+        <></>
+      )}
     </div>
   );
 };

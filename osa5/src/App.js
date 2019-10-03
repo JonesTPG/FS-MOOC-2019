@@ -44,6 +44,17 @@ const App = () => {
     }, 4000);
   };
 
+  const removeBlog = () => {
+    blogService.getAll().then(initialBlogs => {
+      setBlogs(initialBlogs);
+      console.log(initialBlogs);
+    });
+    setNotificationMessage("blog deleted.");
+    setTimeout(() => {
+      setNotificationMessage(null);
+    }, 4000);
+  };
+
   const handleLogin = async event => {
     event.preventDefault();
 
@@ -54,7 +65,6 @@ const App = () => {
       });
 
       window.localStorage.setItem("loggedBlogAppUser", JSON.stringify(user));
-
       setUser(user);
       setUsername("");
       setPassword("");
@@ -120,9 +130,16 @@ const App = () => {
       <Togglable buttonLabel="new blog">
         <CreateBlog update={addBlog} />
       </Togglable>
-      {blogs.map(blog => (
-        <Blog key={blog.id} blog={blog} />
-      ))}
+      {blogs
+        .sort((a, b) => b.likes - a.likes)
+        .map(blog => (
+          <Blog
+            key={blog.id}
+            blog={blog}
+            update={removeBlog}
+            loggedInUser={user.id}
+          />
+        ))}
     </>
   );
 

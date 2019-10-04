@@ -42,7 +42,7 @@ const Blog = ({ blog, update, loggedInUser }) => {
 
   return (
     <div style={blogStyle}>
-      <div onClick={() => toggleDetails()}>
+      <div className="toggle" onClick={() => toggleDetails()}>
         {blog.title} {blog.author}
       </div>
       {showDetails ? (

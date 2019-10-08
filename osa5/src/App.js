@@ -122,7 +122,7 @@ const App = () => {
   );
 
   const blogsList = () => (
-    <>
+    <div className="blog-list">
       <Notification message={notificationMessage}></Notification>
       <p>{user.username} has logged in.</p>
       <button onClick={handleLogOut}>log out</button>
@@ -140,7 +140,7 @@ const App = () => {
             loggedInUser={user.id}
           />
         ))}
-    </>
+    </div>
   );
 
   return <>{user === null ? loginForm() : blogsList()}</>;

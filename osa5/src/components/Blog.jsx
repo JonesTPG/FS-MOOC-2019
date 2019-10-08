@@ -41,7 +41,7 @@ const Blog = ({ blog, update, loggedInUser }) => {
   };
 
   return (
-    <div style={blogStyle}>
+    <div style={blogStyle} className="single-blog">
       <div className="toggle" onClick={() => toggleDetails()}>
         {blog.title} {blog.author}
       </div>

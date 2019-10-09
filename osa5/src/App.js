@@ -1,5 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
+import { useField } from "./hooks";
 import loginService from "./services/login";
 import blogService from "./services/blogs";
 import Blog from "./components/Blog";
@@ -9,8 +10,8 @@ import Notification from "./components/notification";
 import Togglable from "./components/togglable";
 
 const App = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const username = useField("text");
+  const password = useField("password");
   const [user, setUser] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
   const [notificationMessage, setNotificationMessage] = useState(null);
@@ -60,20 +61,22 @@ const App = () => {
 
     try {
       const user = await loginService.login({
-        username,
-        password
+        username: username.value,
+        password: password.value
       });
 
       window.localStorage.setItem("loggedBlogAppUser", JSON.stringify(user));
       setUser(user);
-      setUsername("");
-      setPassword("");
+      username.clear();
+      password.clear();
 
       setNotificationMessage("logged in successfully");
       setTimeout(() => {
         setNotificationMessage(null);
       }, 4000);
     } catch (e) {
+      username.clear();
+      password.clear();
       setErrorMessage("wrong credentials");
       setTimeout(() => {
         setErrorMessage(null);
@@ -100,21 +103,11 @@ const App = () => {
       <form onSubmit={handleLogin}>
         <div>
           username
-          <input
-            type="text"
-            value={username}
-            name="Username"
-            onChange={({ target }) => setUsername(target.value)}
-          />
+          <input {...username.inputFieldProps()} />
         </div>
         <div>
           password
-          <input
-            type="password"
-            value={password}
-            name="Password"
-            onChange={({ target }) => setPassword(target.value)}
-          />
+          <input {...password.inputFieldProps()} />
         </div>
         <button type="submit">login</button>
       </form>

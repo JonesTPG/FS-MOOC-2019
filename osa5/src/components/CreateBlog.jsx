@@ -1,24 +1,27 @@
 import React from "react";
-import { useState } from "react";
+import { useField } from "../hooks/index";
 import blogService from "../services/blogs";
 import PropTypes from "prop-types";
 
 const CreateBlog = ({ update }) => {
-  const [title, setTitle] = useState("");
-  const [author, setAuthor] = useState("");
-  const [url, setUrl] = useState("");
+  const title = useField("text");
+  const author = useField("text");
+  const url = useField("text");
 
   const handleCreate = async event => {
     event.preventDefault();
 
     let newBlog = {
-      title: title,
-      author: author,
-      url: url
+      title: title.value,
+      author: author.value,
+      url: url.value
     };
 
     await blogService.create(newBlog);
     update(newBlog);
+    title.clear();
+    author.clear();
+    url.clear();
   };
 
   return (
@@ -28,32 +31,17 @@ const CreateBlog = ({ update }) => {
       <form onSubmit={handleCreate}>
         <div>
           title:
-          <input
-            type="text"
-            value={title}
-            name="Title"
-            onChange={({ target }) => setTitle(target.value)}
-          />
+          <input {...title.inputFieldProps()} />
         </div>
         <br></br>
         <div>
           author:
-          <input
-            type="text"
-            value={author}
-            name="Author"
-            onChange={({ target }) => setAuthor(target.value)}
-          />
+          <input {...author.inputFieldProps()} />
         </div>
         <br></br>
         <div>
           url:
-          <input
-            type="text"
-            value={url}
-            name="Url"
-            onChange={({ target }) => setUrl(target.value)}
-          />
+          <input {...url.inputFieldProps()} />
         </div>
         <br></br>
         <button type="submit">create</button>

@@ -1,0 +1,15 @@
+{
+  "name": "osa8",
+  "version": "1.0.0",
+  "description": "Full-Stack MOOC osa 8.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Joonas Ryynänen",
+  "license": "ISC",
+  "dependencies": {
+    "apollo-server": "^2.9.5",
+    "graphql": "^14.5.8"
+  }
+}

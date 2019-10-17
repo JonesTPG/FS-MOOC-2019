@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 import { useQuery } from "@apollo/react-hooks";
 
@@ -34,7 +34,7 @@ const Authors = props => {
         </tbody>
       </table>
 
-      <BirthYear></BirthYear>
+      <BirthYear authors={authors}></BirthYear>
     </div>
   );
 };

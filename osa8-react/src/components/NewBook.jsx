@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import { useMutation } from "@apollo/react-hooks";
+import { useQuery } from "@apollo/react-hooks";
 
-import { CREATE_BOOK, ALL_BOOKS, ALL_AUTHORS } from "../queries";
+import { CREATE_BOOK, ALL_BOOKS, ALL_AUTHORS, ME } from "../queries";
 
 const NewBook = props => {
   const [title, setTitle] = useState("");
@@ -13,6 +14,14 @@ const NewBook = props => {
 
   const [addBook] = useMutation(CREATE_BOOK, {
     refetchQueries: [{ query: ALL_BOOKS }, { query: ALL_AUTHORS }]
+  });
+  const token = window.localStorage.getItem("loggedLibraryAppUser");
+
+  const { loading, data } = useQuery(ME, {
+    headers: "Authorization: bearer " + token,
+    onCompleted({ data }) {
+      console.log("data" + data);
+    }
   });
 
   if (!props.show) {

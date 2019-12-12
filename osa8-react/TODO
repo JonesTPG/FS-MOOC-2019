@@ -1,0 +1,3 @@
+-add book sivuston ehdollinen renderöinti sillä perusteella, onko käyttäjä kirjautunut vai ei
+-kirjautuminen toimii atm, ja local storagess on token jota voi käyttää graphql-queryssä "me". "me"-query palauttaa
+kirjautuneen käyttäjän nimen, kun tokenin antaa authorization headerissa

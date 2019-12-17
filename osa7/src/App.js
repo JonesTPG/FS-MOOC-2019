@@ -8,23 +8,11 @@ import {
 } from "react-router-dom";
 
 import About from "./components/about";
+import Anecdote from "./components/anecdote";
 import CreateAnecdote from "./components/createnew";
 import Footer from "./components/footer";
 import AnecdoteList from "./components/anectodelist";
-
-const Menu = () => {
-  const padding = {
-    paddingRight: 5
-  };
-  return (
-    <div>
-      <Link to="/">anecdotes</Link> {"   "}
-      <Link to="/create">create new</Link>
-      {"   "}
-      <Link to="/about">about</Link>
-    </div>
-  );
-};
+import Menu from "./components/menu";
 
 const App = () => {
   const [anecdotes, setAnecdotes] = useState([
@@ -81,13 +69,12 @@ const App = () => {
           render={() => <CreateAnecdote addNew={addNew} />}
         />
         <Route exact path="/about" render={() => <About />} />
-        {/* <Route
-          exact
+        <Route
           path="/anecdotes/:id"
           render={({ match }) => (
             <Anecdote anecdote={anecdoteById(match.params.id)} />
           )}
-        /> */}
+        />
       </Router>
       <Footer />
     </div>

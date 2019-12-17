@@ -1,5 +1,13 @@
 import React, { useState } from "react";
 
+import {
+  BrowserRouter as Router,
+  Route,
+  Link,
+  Redirect,
+  withRouter
+} from "react-router-dom";
+
 const CreateNew = props => {
   const [content, setContent] = useState("");
   const [author, setAuthor] = useState("");
@@ -13,6 +21,7 @@ const CreateNew = props => {
       info,
       votes: 0
     });
+    props.history.push("/");
   };
 
   return (
@@ -49,4 +58,5 @@ const CreateNew = props => {
   );
 };
 
-export default CreateNew;
+const Create = withRouter(CreateNew);
+export default Create;

@@ -1,7 +1,6 @@
 import React from "react";
 
 const Anecdote = props => {
-  console.log(props);
   return (
     <div>
       <h2>{props.anecdote.content}</h2>

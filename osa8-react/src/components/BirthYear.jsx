@@ -27,8 +27,6 @@ const BirthYear = ({ authors }) => {
   const submit = async e => {
     e.preventDefault();
 
-    console.log("update birthyear");
-
     await editAuthor({
       variables: {
         name: selected.value,

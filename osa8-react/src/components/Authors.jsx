@@ -34,7 +34,11 @@ const Authors = props => {
         </tbody>
       </table>
 
-      <BirthYear authors={authors}></BirthYear>
+      {props.token != null ? (
+        <BirthYear authors={authors}></BirthYear>
+      ) : (
+        <p> Log in to edit authors. </p>
+      )}
     </div>
   );
 };

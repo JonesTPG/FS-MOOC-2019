@@ -153,7 +153,6 @@ const resolvers = {
       if (author) {
         author.name = args.name;
         author.born = args.setBornTo;
-        console.log(author);
         return author.save();
       } else {
         return null;

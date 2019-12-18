@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
 import { useMutation } from "@apollo/react-hooks";
-import { useQuery } from "@apollo/react-hooks";
 
-import { CREATE_BOOK, ALL_BOOKS, ALL_AUTHORS, ME } from "../queries";
+import { CREATE_BOOK, ALL_BOOKS, ALL_AUTHORS } from "../queries";
 
 const NewBook = props => {
   const [title, setTitle] = useState("");
@@ -17,12 +16,9 @@ const NewBook = props => {
   });
   const token = window.localStorage.getItem("library-app-token");
 
-  const { loading, data } = useQuery(ME, {
-    headers: "Authorization: bearer " + token,
-    onCompleted({ data }) {
-      console.log("data" + data);
-    }
-  });
+  if (token === "" || token === null) {
+    return <> </>;
+  }
 
   if (!props.show) {
     return null;
@@ -54,41 +50,45 @@ const NewBook = props => {
 
   return (
     <div>
-      <form onSubmit={submit}>
-        <div>
-          title
-          <input
-            value={title}
-            onChange={({ target }) => setTitle(target.value)}
-          />
-        </div>
-        <div>
-          author
-          <input
-            value={author}
-            onChange={({ target }) => setAuthor(target.value)}
-          />
-        </div>
-        <div>
-          published
-          <input
-            type="number"
-            value={published}
-            onChange={({ target }) => setPublished(target.value)}
-          />
-        </div>
-        <div>
-          <input
-            value={genre}
-            onChange={({ target }) => setGenre(target.value)}
-          />
-          <button onClick={addGenre} type="button">
-            add genre
-          </button>
-        </div>
-        <div>genres: {genres.join(" ")}</div>
-        <button type="submit">create book</button>
-      </form>
+      {token === null ? (
+        <p>The token was not found. Please log in again.</p>
+      ) : (
+        <form onSubmit={submit}>
+          <div>
+            title
+            <input
+              value={title}
+              onChange={({ target }) => setTitle(target.value)}
+            />
+          </div>
+          <div>
+            author
+            <input
+              value={author}
+              onChange={({ target }) => setAuthor(target.value)}
+            />
+          </div>
+          <div>
+            published
+            <input
+              type="number"
+              value={published}
+              onChange={({ target }) => setPublished(target.value)}
+            />
+          </div>
+          <div>
+            <input
+              value={genre}
+              onChange={({ target }) => setGenre(target.value)}
+            />
+            <button onClick={addGenre} type="button">
+              add genre
+            </button>
+          </div>
+          <div>genres: {genres.join(" ")}</div>
+          <button type="submit">create book</button>
+        </form>
+      )}
     </div>
   );
 };

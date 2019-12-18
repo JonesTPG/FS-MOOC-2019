@@ -20,6 +20,7 @@ const App = () => {
   const handleLogOut = () => {
     window.localStorage.removeItem("library-app-token");
     setToken(null);
+    setPage("authors");
   };
 
   const setTokenFromLogin = token => {
@@ -42,7 +43,7 @@ const App = () => {
         )}
       </div>
 
-      <Authors show={page === "authors"} />
+      <Authors token={token} show={page === "authors"} />
 
       <Books show={page === "books"} />
 

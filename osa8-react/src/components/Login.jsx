@@ -11,10 +11,8 @@ const Login = props => {
   const [login] = useMutation(LOGIN, {
     onCompleted({ login }) {
       console.log(login);
-      window.localStorage.setItem(
-        "loggedLibraryAppUser",
-        JSON.stringify(login.value)
-      );
+      window.localStorage.setItem("library-app-token", login.value);
+      props.setToken(login.value);
     }
   });
 

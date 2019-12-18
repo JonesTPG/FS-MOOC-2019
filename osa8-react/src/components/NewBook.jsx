@@ -15,7 +15,7 @@ const NewBook = props => {
   const [addBook] = useMutation(CREATE_BOOK, {
     refetchQueries: [{ query: ALL_BOOKS }, { query: ALL_AUTHORS }]
   });
-  const token = window.localStorage.getItem("loggedLibraryAppUser");
+  const token = window.localStorage.getItem("library-app-token");
 
   const { loading, data } = useQuery(ME, {
     headers: "Authorization: bearer " + token,

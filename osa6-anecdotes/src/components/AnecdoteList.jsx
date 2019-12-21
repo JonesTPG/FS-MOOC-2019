@@ -4,7 +4,6 @@ import { voteAnecdote } from "../reducers/anecdoteReducer";
 
 const AnecdoteList = ({ store }) => {
   const anecdotes = store.getState();
-
   return (
     <>
       {anecdotes

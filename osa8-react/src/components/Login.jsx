@@ -1,6 +1,6 @@
 import React from "react";
 import { useMutation } from "@apollo/react-hooks";
-import { LOGIN } from "../queries";
+import { LOGIN, BOOKS_BY_GENRE } from "../queries";
 
 import { useField } from "../hooks/index";
 
@@ -10,7 +10,6 @@ const Login = props => {
 
   const [login] = useMutation(LOGIN, {
     onCompleted({ login }) {
-      console.log(login);
       window.localStorage.setItem("library-app-token", login.value);
       props.setToken(login.value);
     }

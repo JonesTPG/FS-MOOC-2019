@@ -2,7 +2,12 @@ import React, { useState } from "react";
 
 import { useMutation } from "@apollo/react-hooks";
 
-import { CREATE_BOOK, ALL_BOOKS, ALL_AUTHORS } from "../queries";
+import {
+  CREATE_BOOK,
+  ALL_BOOKS,
+  ALL_AUTHORS,
+  BOOKS_BY_GENRE
+} from "../queries";
 
 const NewBook = props => {
   const [title, setTitle] = useState("");

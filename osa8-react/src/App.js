@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
+import { useLazyQuery } from "@apollo/client";
 import Authors from "./components/Authors.jsx";
 import Books from "./components/Books.jsx";
 import NewBook from "./components/NewBook.jsx";
 import Login from "./components/Login.jsx";
+import Recommend from "./components/Recommend.jsx";
+import { USER_FAVORITE_GENRE } from "./queries";
 
 const App = () => {
   const [page, setPage] = useState("authors");
@@ -33,11 +36,13 @@ const App = () => {
       <div>
         <button onClick={() => setPage("authors")}>authors</button>
         <button onClick={() => setPage("books")}>books</button>
+
         {token === "" || token === null ? (
           <button onClick={() => setPage("login")}>login</button>
         ) : (
           <>
             <button onClick={() => setPage("add")}>add book</button>
+            <button onClick={() => setPage("recommend")}>recommend</button>
             <button onClick={() => handleLogOut()}>logout</button>
           </>
         )}
@@ -46,6 +51,8 @@ const App = () => {
       <Authors token={token} show={page === "authors"} />
 
       <Books show={page === "books"} />
+
+      <Recommend token={token} show={page === "recommend"} />
 
       <NewBook show={page === "add"} />
 

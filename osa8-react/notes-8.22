@@ -1,0 +1,14 @@
+step 1: uusi query-pohja graphql backendiin, joka mahdollistaa kirjojen hakemisen genreittäin
+
+step 2: reactin queries.js tiedostoon uusi query, joka käyttää step 1:n query-pohjaa.
+
+step 3: reactiin uusi komponentti Recommend.jsx
+
+step 4: reactin app.js tiedostoon uusi nappi, joka renderöi Recommend-komponentin
+
+step 5: recommend-komponentissa haetaan tieto käyttäjän lempigenrestä, ja haetaan graphql:ltä kyseisen genren kirjat
+
+
+
+
+

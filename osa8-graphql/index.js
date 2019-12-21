@@ -48,6 +48,7 @@ const typeDefs = gql`
     bookCount: Int!
     authorCount: Int!
     allBooks(author: String, genre: String): [Book!]!
+    booksByGenre(genre: String!): [Book!]!
     allAuthors: [Author!]!
     me: User
   }
@@ -77,6 +78,12 @@ const resolvers = {
     authorCount: () => Author.collection.countDocuments(),
     allBooks: (root, args) => {
       return Book.find({});
+    },
+    booksByGenre: (root, args) => {
+      if (args.genre === "") {
+        return Book.find({});
+      }
+      return Book.find({ genres: args.genre });
     },
     allAuthors: () => {
       return Author.find({});

@@ -1,0 +1,2 @@
+huom! jotta useLazyQuerya voi käyttää, pitää installaa uusi package: npm install @apollo/client
+

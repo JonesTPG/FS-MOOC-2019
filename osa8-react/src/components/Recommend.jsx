@@ -1,10 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
-import { useQuery } from "@apollo/react-hooks";
+import { useQuery, useApolloClient } from "@apollo/react-hooks";
+import { useLazyQuery } from "@apollo/client";
 
 import { BOOKS_BY_GENRE, USER_FAVORITE_GENRE } from "../queries";
 
 const Recommend = ({ token, show, genre }) => {
+  const client = useApolloClient();
+
   /* state variables for the favorite genre of the user and the books that relate to the genre.
        both of these values are fetched from the back-end via graphql usequery hook */
   const [favoriteGenre, setFavoriteGenre] = useState(null);
@@ -14,7 +17,6 @@ const Recommend = ({ token, show, genre }) => {
   const { data, loading } = useQuery(USER_FAVORITE_GENRE, {
     onCompleted: data => {
       if (data.me != null) {
-        console.log("favorite genre set:" + data.me);
         setFavoriteGenre(data.me.favoriteGenre);
       }
     }
@@ -24,13 +26,22 @@ const Recommend = ({ token, show, genre }) => {
   const skip = favoriteGenre === null;
 
   // when the favorite genre is found out, fetch the books that belong to that genre
-  const { data: booksData, loading: booksLoading } = useQuery(BOOKS_BY_GENRE, {
-    variables: { genre: favoriteGenre },
-    skip: skip,
-    onCompleted: data => {
-      setBooksList(data.booksByGenre);
+  const { data: booksData, loading: booksLoading, refetch } = useQuery(
+    BOOKS_BY_GENRE,
+    {
+      variables: { genre: favoriteGenre },
+      skip: skip,
+      onCompleted: data => {
+        setBooksList(data.booksByGenre);
+      }
     }
-  });
+  );
+
+  useEffect(() => {
+    refetch({ variables: { genre: favoriteGenre } }).then(data => {
+      setBooksList(data.data.booksByGenre);
+    });
+  }, [show, favoriteGenre]);
 
   if (!show) {
     return null;
@@ -43,7 +54,7 @@ const Recommend = ({ token, show, genre }) => {
         <table>
           <tbody>
             <tr>
-              <th></th>
+              <th>name</th>
               <th>author</th>
               <th>published</th>
             </tr>

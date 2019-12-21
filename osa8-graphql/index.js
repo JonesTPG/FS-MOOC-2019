@@ -50,6 +50,7 @@ const typeDefs = gql`
     allBooks(author: String, genre: String): [Book!]!
     booksByGenre(genre: String!): [Book!]!
     allAuthors: [Author!]!
+    allGenres: [String!]!
     me: User
   }
 
@@ -88,6 +89,19 @@ const resolvers = {
     allAuthors: () => {
       return Author.find({});
     },
+    allGenres: async () => {
+      const books = await Book.find({});
+      let allGenres = [];
+      books.map(book => {
+        let genres = book.genres;
+        if (genres != null && genres.length != 0) {
+          genres.map(genre => {
+            if (!allGenres.includes(genre)) allGenres.push(genre);
+          });
+        }
+      });
+      return allGenres;
+    },
     me: (root, args, context) => {
       return context.currentUser;
     }
@@ -117,7 +131,7 @@ const resolvers = {
       if (!currentUser) {
         throw new AuthenticationError("not authenticated");
       }
-
+      console.log(args);
       const book = new Book({
         title: args.title,
         published: args.published,
@@ -142,7 +156,9 @@ const resolvers = {
 
       try {
         await book.save();
+        console.log("saved");
       } catch (error) {
+        console.log(error);
         throw new UserInputError(error.message, {
           invalidArgs: args
         });

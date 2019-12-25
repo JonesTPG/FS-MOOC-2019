@@ -1,12 +1,10 @@
 import React from "react";
+import { connect } from "react-redux";
 
 import { voteAnecdote } from "../reducers/anecdoteReducer";
 import { showNotification } from "../reducers/notificationReducer";
 
-const AnecdoteList = ({ store }) => {
-  const anecdotes = store.getState().anecdotes;
-  const filter = store.getState().filter;
-
+const AnecdoteList = ({ store, anecdotes, filter }) => {
   const handleVote = anecdote => () => {
     store.dispatch(voteAnecdote(anecdote.id));
     store.dispatch(showNotification("you voted anecdote: " + anecdote.content));
@@ -33,4 +31,14 @@ const AnecdoteList = ({ store }) => {
   );
 };
 
-export default AnecdoteList;
+const mapStateToProps = state => {
+  // joskus on hyödyllistä tulostaa mapStateToProps:ista...
+  console.log(state);
+  return {
+    anecdotes: state.anecdotes,
+    filter: state.filter
+  };
+};
+
+const ConnectedAnecdoteList = connect(mapStateToProps)(AnecdoteList);
+export default ConnectedAnecdoteList;

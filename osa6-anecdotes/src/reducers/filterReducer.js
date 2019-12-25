@@ -2,16 +2,16 @@ const initialState = "";
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case "SET_NOTIFICATION":
+    case "SET_FILTER":
       return action.data.text;
     default:
       return state;
   }
 };
 
-export const showNotification = text => {
+export const setFilter = text => {
   return {
-    type: "SET_NOTIFICATION",
+    type: "SET_FILTER",
     data: { text }
   };
 };

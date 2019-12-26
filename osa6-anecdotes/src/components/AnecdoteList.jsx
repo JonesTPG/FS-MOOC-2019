@@ -4,19 +4,21 @@ import { connect } from "react-redux";
 import { voteAnecdote } from "../reducers/anecdoteReducer";
 import { showNotification } from "../reducers/notificationReducer";
 
-const AnecdoteList = ({ store, anecdotes, filter }) => {
+const AnecdoteList = props => {
   const handleVote = anecdote => () => {
-    store.dispatch(voteAnecdote(anecdote.id));
-    store.dispatch(showNotification("you voted anecdote: " + anecdote.content));
+    props.voteAnecdote(anecdote.id);
+    props.showNotification("you voted anecdote: " + anecdote.content);
     setTimeout(() => {
-      store.dispatch(showNotification(""));
+      props.showNotification("");
     }, 5000);
   };
 
   return (
     <>
-      {anecdotes
-        .filter(a => a.content.toLowerCase().startsWith(filter.toLowerCase()))
+      {props.anecdotes
+        .filter(a =>
+          a.content.toLowerCase().startsWith(props.filter.toLowerCase())
+        )
         .sort((a, b) => b.votes - a.votes)
         .map(anecdote => (
           <div key={anecdote.id}>
@@ -32,13 +34,25 @@ const AnecdoteList = ({ store, anecdotes, filter }) => {
 };
 
 const mapStateToProps = state => {
-  // joskus on hyödyllistä tulostaa mapStateToProps:ista...
-  console.log(state);
   return {
     anecdotes: state.anecdotes,
     filter: state.filter
   };
 };
 
-const ConnectedAnecdoteList = connect(mapStateToProps)(AnecdoteList);
+const mapDispatchToProps = dispatch => {
+  return {
+    voteAnecdote: value => {
+      dispatch(voteAnecdote(value));
+    },
+    showNotification: value => {
+      dispatch(showNotification(value));
+    }
+  };
+};
+
+const ConnectedAnecdoteList = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(AnecdoteList);
 export default ConnectedAnecdoteList;

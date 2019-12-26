@@ -1,17 +1,17 @@
 import React from "react";
+import { connect } from "react-redux";
 
 import { addAnecdote } from "../reducers/anecdoteReducer";
 import { showNotification } from "../reducers/notificationReducer";
 
-const AnecdoteForm = ({ store }) => {
+const AnecdoteForm = props => {
   const addNote = event => {
     event.preventDefault();
     const content = event.target.anecdote.value;
-    store.dispatch(addAnecdote(content));
-
-    store.dispatch(showNotification("you added anecdote: " + content));
+    props.addAnecdote(content);
+    props.showNotification("you added anecdote: " + content);
     setTimeout(() => {
-      store.dispatch(showNotification(""));
+      props.showNotification("");
     }, 5000);
     event.target.anecdote.value = "";
   };
@@ -29,4 +29,16 @@ const AnecdoteForm = ({ store }) => {
   );
 };
 
-export default AnecdoteForm;
+const mapDispatchToProps = dispatch => {
+  return {
+    addAnecdote: value => {
+      dispatch(addAnecdote(value));
+    },
+    showNotification: value => {
+      dispatch(showNotification(value));
+    }
+  };
+};
+
+const ConnectedAnecdoteForm = connect(null, mapDispatchToProps)(AnecdoteForm);
+export default ConnectedAnecdoteForm;

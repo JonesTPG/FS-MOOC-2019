@@ -6,15 +6,11 @@ import AnecdoteList from "./components/AnecdoteList";
 import Notification from "./components/Notification";
 import Filter from "./components/Filter";
 
-import anecdoteService from "./services/anecdotes";
-
 import { initializeAnecdotes } from "./reducers/anecdoteReducer";
 
 const App = props => {
   useEffect(() => {
-    anecdoteService
-      .getAll()
-      .then(anecdotes => props.initializeAnecdotes(anecdotes));
+    props.initializeAnecdotes();
   }, [props]);
 
   return (
@@ -28,12 +24,4 @@ const App = props => {
   );
 };
 
-const mapDispatchToProps = dispatch => {
-  return {
-    initializeAnecdotes: value => {
-      dispatch(initializeAnecdotes(value));
-    }
-  };
-};
-
-export default connect(null, mapDispatchToProps)(App);
+export default connect(null, { initializeAnecdotes })(App);

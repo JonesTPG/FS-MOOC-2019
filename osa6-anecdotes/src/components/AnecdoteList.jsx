@@ -7,10 +7,7 @@ import { showNotification } from "../reducers/notificationReducer";
 const AnecdoteList = props => {
   const handleVote = anecdote => () => {
     props.voteAnecdote(anecdote);
-    props.showNotification("you voted anecdote: " + anecdote.content);
-    setTimeout(() => {
-      props.showNotification("");
-    }, 5000);
+    props.showNotification("you voted anecdote: " + anecdote.content, 2);
   };
 
   return (

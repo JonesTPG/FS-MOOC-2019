@@ -11,8 +11,7 @@ const AnecdoteForm = props => {
     event.preventDefault();
     const content = event.target.anecdote.value;
     event.target.anecdote.value = "";
-    const newNote = await anecdoteService.createNew(content);
-    props.addAnecdote(newNote);
+    props.addAnecdote(content);
     props.showNotification("you added anecdote: " + content);
     setTimeout(() => {
       props.showNotification("");
@@ -32,16 +31,7 @@ const AnecdoteForm = props => {
   );
 };
 
-const mapDispatchToProps = dispatch => {
-  return {
-    addAnecdote: value => {
-      dispatch(addAnecdote(value));
-    },
-    showNotification: value => {
-      dispatch(showNotification(value));
-    }
-  };
-};
-
-const ConnectedAnecdoteForm = connect(null, mapDispatchToProps)(AnecdoteForm);
+const ConnectedAnecdoteForm = connect(null, { addAnecdote, showNotification })(
+  AnecdoteForm
+);
 export default ConnectedAnecdoteForm;

@@ -6,7 +6,7 @@ import { showNotification } from "../reducers/notificationReducer";
 
 const AnecdoteList = props => {
   const handleVote = anecdote => () => {
-    props.voteAnecdote(anecdote.id);
+    props.voteAnecdote(anecdote);
     props.showNotification("you voted anecdote: " + anecdote.content);
     setTimeout(() => {
       props.showNotification("");
@@ -41,19 +41,8 @@ const mapStateToProps = state => {
   };
 };
 
-const mapDispatchToProps = dispatch => {
-  return {
-    voteAnecdote: value => {
-      dispatch(voteAnecdote(value));
-    },
-    showNotification: value => {
-      dispatch(showNotification(value));
-    }
-  };
-};
-
-const ConnectedAnecdoteList = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(AnecdoteList);
+const ConnectedAnecdoteList = connect(mapStateToProps, {
+  voteAnecdote,
+  showNotification
+})(AnecdoteList);
 export default ConnectedAnecdoteList;

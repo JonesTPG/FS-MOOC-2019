@@ -5,7 +5,7 @@ export const getId = () => (100000 * Math.random()).toFixed(0);
 const reducer = (state = [], action) => {
   switch (action.type) {
     case "VOTE":
-      const id = action.data.id;
+      const id = action.data;
       const anecdoteToChange = state.find(a => a.id === id);
       const changedAnecdote = {
         ...anecdoteToChange,
@@ -26,10 +26,13 @@ const reducer = (state = [], action) => {
   }
 };
 
-export const voteAnecdote = id => {
-  return {
-    type: "VOTE",
-    data: { id }
+export const voteAnecdote = anecdote => {
+  return async dispatch => {
+    await anecdoteService.voteAnecdote(anecdote);
+    dispatch({
+      type: "VOTE",
+      data: anecdote.id
+    });
   };
 };
 

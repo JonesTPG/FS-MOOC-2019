@@ -69,6 +69,8 @@ const App = () => {
       setUser(user);
       username.clear();
       password.clear();
+      console.log("user" + user.token);
+      blogService.setToken(user.token);
 
       setNotificationMessage("logged in successfully");
       setTimeout(() => {

@@ -1,6 +1,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { useField } from "./hooks";
+import { connect } from "react-redux";
 import loginService from "./services/login";
 import blogService from "./services/blogs";
 import Blog from "./components/Blog";
@@ -9,12 +10,13 @@ import Error from "./components/error";
 import Notification from "./components/notification";
 import Togglable from "./components/togglable";
 
-const App = () => {
+import { showNotification } from "./reducers/notificationReducer";
+import { showError } from "./reducers/errorReducer";
+
+const App = props => {
   const username = useField("text");
   const password = useField("password");
   const [user, setUser] = useState(null);
-  const [errorMessage, setErrorMessage] = useState(null);
-  const [notificationMessage, setNotificationMessage] = useState(null);
   const [blogs, setBlogs] = useState([]);
 
   useEffect(() => {
@@ -37,12 +39,10 @@ const App = () => {
       setBlogs(initialBlogs);
       console.log(initialBlogs);
     });
-    setNotificationMessage(
-      "a new blog " + newBlog.title + " by " + newBlog.author + " added."
+    props.showNotification(
+      "a new blog " + newBlog.title + " by " + newBlog.author + " added.",
+      4
     );
-    setTimeout(() => {
-      setNotificationMessage(null);
-    }, 4000);
   };
 
   const removeBlog = () => {
@@ -50,10 +50,7 @@ const App = () => {
       setBlogs(initialBlogs);
       console.log(initialBlogs);
     });
-    setNotificationMessage("blog deleted.");
-    setTimeout(() => {
-      setNotificationMessage(null);
-    }, 4000);
+    props.showNotification("blog deleted.", 4);
   };
 
   const handleLogin = async event => {
@@ -72,33 +69,24 @@ const App = () => {
       console.log("user" + user.token);
       blogService.setToken(user.token);
 
-      setNotificationMessage("logged in successfully");
-      setTimeout(() => {
-        setNotificationMessage(null);
-      }, 4000);
+      props.showNotification("logged in succesfully", 4);
     } catch (e) {
       username.clear();
       password.clear();
-      setErrorMessage("wrong credentials");
-      setTimeout(() => {
-        setErrorMessage(null);
-      }, 4000);
+      props.showError("wrong credentials", 4);
     }
   };
 
   const handleLogOut = () => {
     window.localStorage.clear();
     setUser(null);
-    setNotificationMessage("logged out successfully");
-    setTimeout(() => {
-      setNotificationMessage(null);
-    }, 4000);
+    props.showNotification("logged out successfully", 4);
   };
 
   const loginForm = () => (
     <>
-      <Error message={errorMessage} />
-      <Notification message={notificationMessage}></Notification>
+      <Error />
+      <Notification></Notification>
 
       <p>login to the application</p>
 
@@ -118,7 +106,7 @@ const App = () => {
 
   const blogsList = () => (
     <div className="blog-list">
-      <Notification message={notificationMessage}></Notification>
+      <Notification></Notification>
       <p>{user.username} has logged in.</p>
       <button onClick={handleLogOut}>log out</button>
 
@@ -141,4 +129,5 @@ const App = () => {
   return <>{user === null ? loginForm() : blogsList()}</>;
 };
 
-export default App;
+const ConnectedApp = connect(null, { showNotification, showError })(App);
+export default ConnectedApp;

@@ -1,4 +1,5 @@
 import React from "react";
+import { connect } from "react-redux";
 
 const style = {
   color: "green",
@@ -10,12 +11,19 @@ const style = {
   marginBottom: 10
 };
 
-const Notification = ({ message }) => {
-  if (message === null) {
+const Notification = props => {
+  if (props.notification === null || props.notification === "") {
     return null;
   }
 
-  return <div style={style}>{message}</div>;
+  return <div style={style}>{props.notification}</div>;
 };
 
-export default Notification;
+const mapStateToProps = state => {
+  return {
+    notification: state.notification
+  };
+};
+
+const ConnectedNotification = connect(mapStateToProps)(Notification);
+export default ConnectedNotification;

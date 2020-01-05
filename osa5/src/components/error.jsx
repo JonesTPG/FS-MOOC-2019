@@ -1,4 +1,5 @@
 import React from "react";
+import { connect } from "react-redux";
 
 const style = {
   color: "red",
@@ -10,12 +11,19 @@ const style = {
   marginBottom: 10
 };
 
-const Error = ({ message }) => {
-  if (message === null) {
+const Error = props => {
+  if (props.error === null || props.error === "") {
     return null;
   }
 
-  return <div style={style}>{message}</div>;
+  return <div style={style}>{props.error}</div>;
 };
 
-export default Error;
+const mapStateToProps = state => {
+  return {
+    error: state.error
+  };
+};
+
+const ConnectedError = connect(mapStateToProps)(Error);
+export default ConnectedError;

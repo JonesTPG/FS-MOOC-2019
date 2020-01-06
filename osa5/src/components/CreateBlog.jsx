@@ -1,9 +1,11 @@
 import React from "react";
 import { useField } from "../hooks/index";
-import blogService from "../services/blogs";
-import PropTypes from "prop-types";
+import { connect } from "react-redux";
 
-const CreateBlog = ({ update }) => {
+import { addBlog } from "../reducers/blogReducer";
+import { showNotification } from "../reducers/notificationReducer";
+
+const CreateBlog = props => {
   const title = useField("text");
   const author = useField("text");
   const url = useField("text");
@@ -17,8 +19,7 @@ const CreateBlog = ({ update }) => {
       url: url.value
     };
 
-    await blogService.create(newBlog);
-    update(newBlog);
+    props.addBlog(newBlog);
     title.clear();
     author.clear();
     url.clear();
@@ -51,8 +52,7 @@ const CreateBlog = ({ update }) => {
   );
 };
 
-CreateBlog.propTypes = {
-  update: PropTypes.func.isRequired
-};
-
-export default CreateBlog;
+const ConnectedCreateBlog = connect(null, {
+  addBlog
+})(CreateBlog, showNotification);
+export default ConnectedCreateBlog;

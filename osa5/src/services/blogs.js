@@ -4,9 +4,7 @@ const baseUrl = "/api/blogs";
 let token = null;
 
 const setToken = newToken => {
-  console.log("setting token...");
   token = `bearer ${newToken}`;
-  console.log("new token" + token);
 };
 
 const getAll = () => {
@@ -25,10 +23,16 @@ const update = async updatedBlog => {
   return response.data;
 };
 
+const like = async id => {
+  const url = baseUrl + "/" + id + "/likes";
+  const response = await axios.post(url);
+  return response.data;
+};
+
 const remove = async id => {
   const config = { headers: { Authorization: token } };
   const response = await axios.delete(baseUrl + "/" + id, config);
   return response.data;
 };
 
-export default { getAll, setToken, create, update, remove };
+export default { getAll, setToken, create, update, like, remove };

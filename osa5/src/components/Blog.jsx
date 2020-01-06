@@ -1,8 +1,11 @@
 import React from "react";
 import { useState } from "react";
-import blogService from "../services/blogs";
+import { connect } from "react-redux";
 
-const Blog = ({ blog, update, loggedInUser }) => {
+import { deleteBlog, likeBlog } from "../reducers/blogReducer";
+import { showNotification } from "../reducers/notificationReducer";
+
+const Blog = props => {
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -11,32 +14,25 @@ const Blog = ({ blog, update, loggedInUser }) => {
     marginBottom: 5
   };
 
+  let blog = props.blog;
+  let loggedInUser = props.loggedInUser;
+
   const [showDetails, setShowDetails] = useState(false);
-  const [likes, setLikes] = useState(blog.likes);
 
   const toggleDetails = () => {
     setShowDetails(!showDetails);
   };
 
-  const handleClick = async () => {
-    const updatedBlog = {
-      author: blog.author,
-      title: blog.title,
-      url: blog.url,
-      likes: likes + 1,
-      id: blog.id
-    };
-
-    await blogService.update(updatedBlog);
-    setLikes(likes + 1);
+  const handleLike = async () => {
+    props.likeBlog(blog.id);
   };
 
-  const handleClick2 = async () => {
+  const handleRemove = async () => {
     let confirmed = window.confirm("Delete " + blog.title + "?");
 
     if (confirmed === true) {
-      await blogService.remove(blog.id);
-      update();
+      props.deleteBlog(blog.id);
+      props.showNotification("blog deleted.", 4);
     }
   };
 
@@ -48,14 +44,14 @@ const Blog = ({ blog, update, loggedInUser }) => {
       {showDetails ? (
         <div>
           <p>{blog.url}</p>
-          <p>{likes}</p>
-          <button onClick={handleClick}>like</button>
+          <p>{blog.likes}</p>
+          <button onClick={handleLike}>like</button>
           <p>added by {blog.user.name}</p>
 
           <p> user id: {blog.user.id}</p>
           <p> logged in user id: {loggedInUser}</p>
           {blog.user.id === loggedInUser ? (
-            <button onClick={handleClick2}>remove</button>
+            <button onClick={handleRemove}>remove</button>
           ) : (
             <p>you dont own this blog.</p>
           )}
@@ -67,4 +63,9 @@ const Blog = ({ blog, update, loggedInUser }) => {
   );
 };
 
-export default Blog;
+const ConnectedBlog = connect(null, {
+  deleteBlog,
+  likeBlog,
+  showNotification
+})(Blog);
+export default ConnectedBlog;

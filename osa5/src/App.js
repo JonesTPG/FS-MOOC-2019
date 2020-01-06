@@ -12,46 +12,24 @@ import Togglable from "./components/togglable";
 
 import { showNotification } from "./reducers/notificationReducer";
 import { showError } from "./reducers/errorReducer";
+import { initializeBlogs } from "./reducers/blogReducer";
 
 const App = props => {
   const username = useField("text");
   const password = useField("password");
   const [user, setUser] = useState(null);
-  const [blogs, setBlogs] = useState([]);
+
+  let initializeBlogs = props.initializeBlogs;
 
   useEffect(() => {
-    blogService.getAll().then(initialBlogs => {
-      setBlogs(initialBlogs);
-    });
-  }, []);
-
-  useEffect(() => {
+    initializeBlogs();
     const loggedUserJSON = window.localStorage.getItem("loggedBlogAppUser");
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON);
       setUser(user);
       blogService.setToken(user.token);
     }
-  }, []);
-
-  const addBlog = newBlog => {
-    blogService.getAll().then(initialBlogs => {
-      setBlogs(initialBlogs);
-      console.log(initialBlogs);
-    });
-    props.showNotification(
-      "a new blog " + newBlog.title + " by " + newBlog.author + " added.",
-      4
-    );
-  };
-
-  const removeBlog = () => {
-    blogService.getAll().then(initialBlogs => {
-      setBlogs(initialBlogs);
-      console.log(initialBlogs);
-    });
-    props.showNotification("blog deleted.", 4);
-  };
+  }, [initializeBlogs]);
 
   const handleLogin = async event => {
     event.preventDefault();
@@ -66,7 +44,6 @@ const App = props => {
       setUser(user);
       username.clear();
       password.clear();
-      console.log("user" + user.token);
       blogService.setToken(user.token);
 
       props.showNotification("logged in succesfully", 4);
@@ -111,17 +88,12 @@ const App = props => {
       <button onClick={handleLogOut}>log out</button>
 
       <Togglable buttonLabel="new blog">
-        <CreateBlog update={addBlog} />
+        <CreateBlog />
       </Togglable>
-      {blogs
+      {props.blogs
         .sort((a, b) => b.likes - a.likes)
         .map(blog => (
-          <Blog
-            key={blog.id}
-            blog={blog}
-            update={removeBlog}
-            loggedInUser={user.id}
-          />
+          <Blog key={blog.id} blog={blog} loggedInUser={user.id} />
         ))}
     </div>
   );
@@ -129,5 +101,15 @@ const App = props => {
   return <>{user === null ? loginForm() : blogsList()}</>;
 };
 
-const ConnectedApp = connect(null, { showNotification, showError })(App);
+const mapStateToProps = state => {
+  return {
+    blogs: state.blogs
+  };
+};
+
+const ConnectedApp = connect(mapStateToProps, {
+  showNotification,
+  showError,
+  initializeBlogs
+})(App);
 export default ConnectedApp;

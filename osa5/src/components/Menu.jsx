@@ -5,7 +5,6 @@ const Menu = () => {
   return (
     <>
       <p>
-        {" "}
         <Link to="/users">Users</Link> <Link to="/blogs">Blogs</Link>{" "}
       </p>
     </>

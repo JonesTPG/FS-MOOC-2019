@@ -12,7 +12,7 @@ import {
 } from "react-router-dom";
 
 import blogService from "./services/blogs";
-import Blog from "./components/Blog";
+import BlogListItem from "./components/BlogListItem";
 import CreateBlog from "./components/CreateBlog";
 import Menu from "./components/Menu";
 import Users from "./components/Users";
@@ -26,6 +26,7 @@ import { showError } from "./reducers/errorReducer";
 import { initializeBlogs } from "./reducers/blogReducer";
 import { logIn, logOut } from "./reducers/loginReducer";
 import { getUsers } from "./reducers/userReducer";
+import SingleBlog from "./components/SingleBlog";
 
 const App = props => {
   const username = useField("text");
@@ -102,7 +103,11 @@ const App = props => {
         {props.blogs
           .sort((a, b) => b.likes - a.likes)
           .map(blog => (
-            <Blog key={blog.id} blog={blog} loggedInUser={props.user.id} />
+            <BlogListItem
+              key={blog.id}
+              blog={blog}
+              loggedInUser={props.user.id}
+            />
           ))}
       </div>
 
@@ -111,6 +116,13 @@ const App = props => {
         exact
         path="/users/:id"
         render={({ match }) => <User id={match.params.id} />}
+      />
+      <Route
+        exact
+        path="/blogs/:id"
+        render={({ match }) => (
+          <SingleBlog loggedInUser={props.user.id} id={match.params.id} />
+        )}
       />
     </Router>
   );

@@ -1,36 +1,21 @@
 /* eslint-disable indent */
-import loginService from "../services/login";
+import userService from "../services/users";
 
-let user = JSON.parse(localStorage.getItem("loggedBlogAppUser"));
-const initialState = user ? user : {};
-const reducer = (state = initialState, action) => {
+const reducer = (state = [], action) => {
   switch (action.type) {
-    case "LOGIN":
+    case "INIT_USERS":
       return action.data;
-    case "LOGOUT":
-      return {};
     default:
       return state;
   }
 };
 
-export const logIn = credentials => {
+export const getUsers = () => {
   return async dispatch => {
-    const user = await loginService.login(credentials);
-
-    window.localStorage.setItem("loggedBlogAppUser", JSON.stringify(user));
+    const users = await userService.getAll();
     dispatch({
-      type: "LOGIN",
-      data: user
-    });
-  };
-};
-
-export const logOut = () => {
-  return async dispatch => {
-    window.localStorage.clear();
-    dispatch({
-      type: "LOGOUT"
+      type: "INIT_USERS",
+      data: users
     });
   };
 };

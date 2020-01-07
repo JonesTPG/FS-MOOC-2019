@@ -2,9 +2,20 @@ import React from "react";
 import { useEffect } from "react";
 import { useField } from "./hooks";
 import { connect } from "react-redux";
+
+import {
+  BrowserRouter as Router,
+  Route,
+  Link,
+  Redirect,
+  withRouter
+} from "react-router-dom";
+
 import blogService from "./services/blogs";
 import Blog from "./components/Blog";
 import CreateBlog from "./components/CreateBlog";
+import Menu from "./components/Menu";
+import Users from "./components/Users";
 import Error from "./components/error";
 import Notification from "./components/notification";
 import Togglable from "./components/togglable";
@@ -12,7 +23,7 @@ import Togglable from "./components/togglable";
 import { showNotification } from "./reducers/notificationReducer";
 import { showError } from "./reducers/errorReducer";
 import { initializeBlogs } from "./reducers/blogReducer";
-import { logIn, logOut } from "./reducers/userReducer";
+import { logIn, logOut } from "./reducers/loginReducer";
 
 const App = props => {
   const username = useField("text");
@@ -74,20 +85,25 @@ const App = props => {
   );
 
   const blogsList = () => (
-    <div className="blog-list">
-      <Notification></Notification>
-      <p>{props.user.username} has logged in.</p>
-      <button onClick={handleLogOut}>log out</button>
+    <Router>
+      <Menu />
+      <div className="blog-list">
+        <Notification></Notification>
+        <p>{props.user.username} has logged in.</p>
+        <button onClick={handleLogOut}>log out</button>
 
-      <Togglable buttonLabel="new blog">
-        <CreateBlog />
-      </Togglable>
-      {props.blogs
-        .sort((a, b) => b.likes - a.likes)
-        .map(blog => (
-          <Blog key={blog.id} blog={blog} loggedInUser={props.user.id} />
-        ))}
-    </div>
+        <Togglable buttonLabel="new blog">
+          <CreateBlog />
+        </Togglable>
+        {props.blogs
+          .sort((a, b) => b.likes - a.likes)
+          .map(blog => (
+            <Blog key={blog.id} blog={blog} loggedInUser={props.user.id} />
+          ))}
+      </div>
+
+      <Route exact path="/users" render={() => <Users />}></Route>
+    </Router>
   );
 
   return <>{token == null ? loginForm() : blogsList()}</>;

@@ -1,15 +1,9 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { connect } from "react-redux";
-
-import { getUsers } from "../reducers/userReducer";
+import { Link } from "react-router-dom";
 
 const Users = props => {
   let users = props.users;
-  let getUsers = props.getUsers;
-
-  useEffect(() => {
-    getUsers();
-  }, [getUsers]);
 
   return (
     <>
@@ -24,7 +18,9 @@ const Users = props => {
         <tbody>
           {users.map(user => (
             <tr key={user.id}>
-              <td>{user.username} </td>
+              <td>
+                <Link to={"/users/" + user.id}> {user.username} </Link>
+              </td>
               <td> {user.blogs.length}</td>
             </tr>
           ))}
@@ -40,5 +36,5 @@ const mapStateToProps = state => {
   };
 };
 
-const ConnectedUsers = connect(mapStateToProps, { getUsers })(Users);
+const ConnectedUsers = connect(mapStateToProps)(Users);
 export default ConnectedUsers;

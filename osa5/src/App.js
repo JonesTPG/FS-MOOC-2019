@@ -19,21 +19,25 @@ import Users from "./components/Users";
 import Error from "./components/error";
 import Notification from "./components/notification";
 import Togglable from "./components/togglable";
+import User from "./components/User";
 
 import { showNotification } from "./reducers/notificationReducer";
 import { showError } from "./reducers/errorReducer";
 import { initializeBlogs } from "./reducers/blogReducer";
 import { logIn, logOut } from "./reducers/loginReducer";
+import { getUsers } from "./reducers/userReducer";
 
 const App = props => {
   const username = useField("text");
   const password = useField("password");
 
   let initializeBlogs = props.initializeBlogs;
+  let initializeUsers = props.getUsers;
   let token = props.user.token;
 
   useEffect(() => {
     initializeBlogs();
+    initializeUsers();
     blogService.setToken(token);
   }, [initializeBlogs, token]);
 
@@ -103,6 +107,11 @@ const App = props => {
       </div>
 
       <Route exact path="/users" render={() => <Users />}></Route>
+      <Route
+        exact
+        path="/users/:id"
+        render={({ match }) => <User id={match.params.id} />}
+      />
     </Router>
   );
 
@@ -120,6 +129,7 @@ const ConnectedApp = connect(mapStateToProps, {
   showNotification,
   showError,
   initializeBlogs,
+  getUsers,
   logIn,
   logOut
 })(App);

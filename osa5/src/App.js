@@ -78,13 +78,15 @@ const App = props => {
       <form onSubmit={handleLogin}>
         <div>
           username
-          <input {...username.inputFieldProps()} />
+          <input data-cy="username" {...username.inputFieldProps()} />
         </div>
         <div>
           password
-          <input {...password.inputFieldProps()} />
+          <input data-cy="password" {...password.inputFieldProps()} />
         </div>
-        <button type="submit">login</button>
+        <button data-cy="login" type="submit">
+          login
+        </button>
       </form>
     </>
   );
@@ -95,7 +97,9 @@ const App = props => {
       <div className="blog-list">
         <Notification></Notification>
         <p>{props.user.username} has logged in.</p>
-        <button onClick={handleLogOut}>log out</button>
+        <button data-cy="log-out" onClick={handleLogOut}>
+          log out
+        </button>
 
         <Togglable buttonLabel="new blog">
           <CreateBlog />
@@ -127,7 +131,12 @@ const App = props => {
     </Router>
   );
 
-  return <>{token == null ? loginForm() : blogsList()}</>;
+  return (
+    <>
+      <h2>BLOGLIST APPLICATION</h2>
+      {token == null ? loginForm() : blogsList()}
+    </>
+  );
 };
 
 const mapStateToProps = state => {

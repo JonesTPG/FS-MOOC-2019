@@ -32,20 +32,22 @@ const CreateBlog = props => {
       <form onSubmit={handleCreate}>
         <div>
           title:
-          <input {...title.inputFieldProps()} />
+          <input data-cy="blog-title" {...title.inputFieldProps()} />
         </div>
         <br></br>
         <div>
           author:
-          <input {...author.inputFieldProps()} />
+          <input data-cy="blog-author" {...author.inputFieldProps()} />
         </div>
         <br></br>
         <div>
           url:
-          <input {...url.inputFieldProps()} />
+          <input data-cy="blog-url" {...url.inputFieldProps()} />
         </div>
         <br></br>
-        <button type="submit">create</button>
+        <button data-cy="post-blog" type="submit">
+          create
+        </button>
         <br></br>
       </form>
     </>

@@ -31,6 +31,7 @@ const blogs = [
   }
 ];
 
+// eslint-disable-next-line no-unused-vars
 let token;
 
 const getAll = () => {

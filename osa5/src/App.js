@@ -128,7 +128,7 @@ const App = props => {
   return (
     <>
       <h2>BLOGLIST APPLICATION</h2>
-      {token == null ? loginForm() : blogsList()}
+      {token === null || token === undefined ? loginForm() : blogsList()}
     </>
   );
 };

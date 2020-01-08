@@ -21,6 +21,7 @@ import { initializeBlogs } from "./reducers/blogReducer";
 import { logIn, logOut } from "./reducers/loginReducer";
 import { getUsers } from "./reducers/userReducer";
 import SingleBlog from "./components/SingleBlog";
+import { Container, Button, Form, Divider } from "semantic-ui-react";
 
 const App = props => {
   const username = useField("text");
@@ -69,19 +70,19 @@ const App = props => {
 
       <p>login to the application</p>
 
-      <form onSubmit={handleLogin}>
-        <div>
-          username
+      <Form onSubmit={handleLogin}>
+        <Form.Field>
+          <label>username</label>
           <input data-cy="username" {...username.inputFieldProps()} />
-        </div>
-        <div>
-          password
+        </Form.Field>
+        <Form.Field>
+          <label>password</label>
           <input data-cy="password" {...password.inputFieldProps()} />
-        </div>
-        <button data-cy="login" type="submit">
+        </Form.Field>
+        <Button data-cy="login" type="submit">
           login
-        </button>
-      </form>
+        </Button>
+      </Form>
     </>
   );
 
@@ -91,10 +92,10 @@ const App = props => {
       <div className="blog-list">
         <Notification></Notification>
         <p>{props.user.username} has logged in.</p>
-        <button data-cy="log-out" onClick={handleLogOut}>
+        <Button data-cy="log-out" onClick={handleLogOut}>
           log out
-        </button>
-
+        </Button>
+        <Divider />
         <Togglable buttonLabel="new blog">
           <CreateBlog />
         </Togglable>
@@ -108,7 +109,7 @@ const App = props => {
             />
           ))}
       </div>
-
+      <Divider />
       <Route exact path="/users" render={() => <Users />}></Route>
       <Route
         exact
@@ -126,10 +127,10 @@ const App = props => {
   );
 
   return (
-    <>
+    <Container>
       <h2>BLOGLIST APPLICATION</h2>
       {token === null || token === undefined ? loginForm() : blogsList()}
-    </>
+    </Container>
   );
 };
 

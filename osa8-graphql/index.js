@@ -1,7 +1,9 @@
-const { ApolloServer, UserInputError, gql } = require("apollo-server");
+const { ApolloServer, UserInputError, gql, PubSub } = require("apollo-server");
 const uuid = require("uuid/v1");
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
+
+const pubsub = new PubSub();
 
 const Book = require("./models/book");
 const Author = require("./models/author");
@@ -68,6 +70,10 @@ const typeDefs = gql`
 
     login(username: String!, password: String!): Token
   }
+
+  type Subscription {
+    bookAdded: Book!
+  }
 `;
 
 const resolvers = {
@@ -96,7 +102,9 @@ const resolvers = {
         let genres = book.genres;
         if (genres != null && genres.length != 0) {
           genres.map(genre => {
-            if (!allGenres.includes(genre)) allGenres.push(genre);
+            if (!allGenres.includes(genre)) {
+              allGenres.push(genre);
+            }
           });
         }
       });
@@ -131,7 +139,6 @@ const resolvers = {
       if (!currentUser) {
         throw new AuthenticationError("not authenticated");
       }
-      console.log(args);
       const book = new Book({
         title: args.title,
         published: args.published,
@@ -156,13 +163,13 @@ const resolvers = {
 
       try {
         await book.save();
-        console.log("saved");
       } catch (error) {
-        console.log(error);
         throw new UserInputError(error.message, {
           invalidArgs: args
         });
       }
+
+      pubsub.publish("BOOK_ADDED", { bookAdded: book });
 
       return book;
     },
@@ -207,6 +214,11 @@ const resolvers = {
 
       return { value: jwt.sign(userForToken, config.JWT_SECRET) };
     }
+  },
+  Subscription: {
+    bookAdded: {
+      subscribe: () => pubsub.asyncIterator(["BOOK_ADDED"])
+    }
   }
 };
 
@@ -223,6 +235,7 @@ const server = new ApolloServer({
   }
 });
 
-server.listen().then(({ url }) => {
+server.listen().then(({ url, subscriptionsUrl }) => {
   console.log(`Server ready at ${url}`);
+  console.log(`Subscriptions ready at ${subscriptionsUrl}`);
 });

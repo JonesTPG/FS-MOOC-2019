@@ -5,7 +5,13 @@ const Menu = () => {
   return (
     <>
       <p>
-        <Link to="/users">Users</Link> <Link to="/blogs">Blogs</Link>{" "}
+        <Link data-cy="user-link" to="/users">
+          Users
+        </Link>
+        {"   "}
+        <Link data-cy="blogs-link" to="/blogs">
+          Blogs
+        </Link>
       </p>
     </>
   );

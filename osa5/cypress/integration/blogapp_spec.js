@@ -1,5 +1,5 @@
 describe("BlogApp ", function() {
-  beforeEach(function() {
+  before(function() {
     // reset the database
     cy.request("POST", "http://localhost:3003/api/testing/reset");
 
@@ -7,11 +7,24 @@ describe("BlogApp ", function() {
       username: "joonas",
       password: "joonas"
     };
+
     cy.request("POST", "http://localhost:3003/api/users/", user);
+  });
+
+  beforeEach(function() {
     cy.visit("http://localhost:3000");
   });
+
   it("login page can be opened", function() {
     cy.contains("BLOGLIST APPLICATION");
+  });
+
+  it("wrong credentials prevent login", function() {
+    cy.contains("login to the application");
+    cy.get("[data-cy=username]").type("wrong-username");
+    cy.get("[data-cy=password]").type("wrong-password");
+    cy.get("[data-cy=login]").click();
+    cy.contains("login to the application");
   });
 
   describe("when logged in", function() {
@@ -42,9 +55,27 @@ describe("BlogApp ", function() {
       cy.contains("new blog joonas");
     });
 
-    it("log out is succesfull", function() {
-      cy.get("[data-cy=log-out]").click();
-      cy.contains("login to the application");
+    describe("user pages are working", function() {
+      it("users page shows correct content", function() {
+        cy.get("[data-cy=user-link]").click();
+        cy.get("[data-cy=users-table]").contains("joonas");
+      });
+
+      it("single user page shows correct content", function() {
+        cy.get("[data-cy=user-link]").click();
+        cy.get("[data-cy=users-table]").contains("joonas");
+        cy.get("[data-cy=users-table]")
+          .contains("joonas")
+          .click();
+        cy.get("[data-cy=user-info-username]").contains("joonas");
+      });
+    });
+
+    describe("exiting the application", function() {
+      it("log out is succesfull", function() {
+        cy.get("[data-cy=log-out]").click();
+        cy.contains("login to the application");
+      });
     });
   });
 });

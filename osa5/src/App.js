@@ -3,13 +3,7 @@ import { useEffect } from "react";
 import { useField } from "./hooks";
 import { connect } from "react-redux";
 
-import {
-  BrowserRouter as Router,
-  Route,
-  Link,
-  Redirect,
-  withRouter
-} from "react-router-dom";
+import { BrowserRouter as Router, Route } from "react-router-dom";
 
 import blogService from "./services/blogs";
 import BlogListItem from "./components/BlogListItem";
@@ -40,7 +34,7 @@ const App = props => {
     initializeBlogs();
     initializeUsers();
     blogService.setToken(token);
-  }, [initializeBlogs, token]);
+  }, [initializeBlogs, initializeUsers, token]);
 
   const handleLogin = async event => {
     event.preventDefault();

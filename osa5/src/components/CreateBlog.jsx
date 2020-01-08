@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 
 import { addBlog } from "../reducers/blogReducer";
 import { showNotification } from "../reducers/notificationReducer";
+import { Form, Button } from "semantic-ui-react";
 
 const CreateBlog = props => {
   const title = useField("text");
@@ -29,25 +30,26 @@ const CreateBlog = props => {
     <>
       <h3>create new</h3>
 
-      <form onSubmit={handleCreate}>
-        <div>
-          title:
-          <input {...title.inputFieldProps()} />
-        </div>
-        <br></br>
-        <div>
-          author:
-          <input {...author.inputFieldProps()} />
-        </div>
-        <br></br>
-        <div>
-          url:
-          <input {...url.inputFieldProps()} />
-        </div>
-        <br></br>
-        <button type="submit">create</button>
-        <br></br>
-      </form>
+      <Form onSubmit={handleCreate}>
+        <Form.Field>
+          <label>title:</label>
+          <input data-cy="blog-title" {...title.inputFieldProps()} />
+        </Form.Field>
+
+        <Form.Field>
+          <label>author:</label>
+          <input data-cy="blog-author" {...author.inputFieldProps()} />
+        </Form.Field>
+
+        <Form.Field>
+          <label>url:</label>
+          <input data-cy="blog-url" {...url.inputFieldProps()} />
+        </Form.Field>
+
+        <Button data-cy="post-blog" type="submit">
+          create
+        </Button>
+      </Form>
     </>
   );
 };

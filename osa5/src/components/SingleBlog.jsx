@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { deleteBlog, likeBlog } from "../reducers/blogReducer";
 import { showNotification } from "../reducers/notificationReducer";
+import { Button } from "semantic-ui-react";
 
 const SingleBlog = props => {
   let blog = props.blog;
@@ -30,10 +31,10 @@ const SingleBlog = props => {
       <h3>{blog.title}</h3> by <h3>{blog.author}</h3>
       <p>url: {blog.url}</p>
       <p>likes: {blog.likes}</p>
-      <button onClick={handleLike}>like</button>
+      <Button onClick={handleLike}>like</Button>
       <p>added by {blog.user.username}</p>
       {blog.user.id === props.loggedInUser ? (
-        <button onClick={handleRemove}>remove</button>
+        <Button onClick={handleRemove}>remove</Button>
       ) : (
         <p>you dont own this blog.</p>
       )}

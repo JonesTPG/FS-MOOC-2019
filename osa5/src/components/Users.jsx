@@ -8,7 +8,7 @@ const Users = props => {
   return (
     <>
       <h3> users </h3>
-      <table>
+      <table data-cy="users-table">
         <thead>
           <tr>
             <th>username</th>

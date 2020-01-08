@@ -3,13 +3,7 @@ import { useEffect } from "react";
 import { useField } from "./hooks";
 import { connect } from "react-redux";
 
-import {
-  BrowserRouter as Router,
-  Route,
-  Link,
-  Redirect,
-  withRouter
-} from "react-router-dom";
+import { BrowserRouter as Router, Route } from "react-router-dom";
 
 import blogService from "./services/blogs";
 import BlogListItem from "./components/BlogListItem";
@@ -27,6 +21,7 @@ import { initializeBlogs } from "./reducers/blogReducer";
 import { logIn, logOut } from "./reducers/loginReducer";
 import { getUsers } from "./reducers/userReducer";
 import SingleBlog from "./components/SingleBlog";
+import { Container, Button, Form, Divider } from "semantic-ui-react";
 
 const App = props => {
   const username = useField("text");
@@ -40,7 +35,7 @@ const App = props => {
     initializeBlogs();
     initializeUsers();
     blogService.setToken(token);
-  }, [initializeBlogs, token]);
+  }, [initializeBlogs, initializeUsers, token]);
 
   const handleLogin = async event => {
     event.preventDefault();
@@ -75,17 +70,19 @@ const App = props => {
 
       <p>login to the application</p>
 
-      <form onSubmit={handleLogin}>
-        <div>
-          username
-          <input {...username.inputFieldProps()} />
-        </div>
-        <div>
-          password
-          <input {...password.inputFieldProps()} />
-        </div>
-        <button type="submit">login</button>
-      </form>
+      <Form onSubmit={handleLogin}>
+        <Form.Field>
+          <label>username</label>
+          <input data-cy="username" {...username.inputFieldProps()} />
+        </Form.Field>
+        <Form.Field>
+          <label>password</label>
+          <input data-cy="password" {...password.inputFieldProps()} />
+        </Form.Field>
+        <Button data-cy="login" type="submit">
+          login
+        </Button>
+      </Form>
     </>
   );
 
@@ -95,8 +92,10 @@ const App = props => {
       <div className="blog-list">
         <Notification></Notification>
         <p>{props.user.username} has logged in.</p>
-        <button onClick={handleLogOut}>log out</button>
-
+        <Button data-cy="log-out" onClick={handleLogOut}>
+          log out
+        </Button>
+        <Divider />
         <Togglable buttonLabel="new blog">
           <CreateBlog />
         </Togglable>
@@ -110,7 +109,7 @@ const App = props => {
             />
           ))}
       </div>
-
+      <Divider />
       <Route exact path="/users" render={() => <Users />}></Route>
       <Route
         exact
@@ -127,7 +126,12 @@ const App = props => {
     </Router>
   );
 
-  return <>{token == null ? loginForm() : blogsList()}</>;
+  return (
+    <Container>
+      <h2>BLOGLIST APPLICATION</h2>
+      {token === null || token === undefined ? loginForm() : blogsList()}
+    </Container>
+  );
 };
 
 const mapStateToProps = state => {

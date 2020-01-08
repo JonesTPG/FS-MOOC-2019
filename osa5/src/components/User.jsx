@@ -11,7 +11,7 @@ const User = props => {
 
   return (
     <>
-      <h3>{user.username}</h3>
+      <h3 data-cy="user-info-username">{user.username}</h3>
       <strong> added blogs </strong>
       <ul>
         {user.blogs.map(blog => (

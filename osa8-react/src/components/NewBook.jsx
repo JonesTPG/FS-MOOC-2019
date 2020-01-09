@@ -17,8 +17,9 @@ const NewBook = props => {
   const [genres, setGenres] = useState([]);
 
   const [addBook] = useMutation(CREATE_BOOK, {
-    refetchQueries: [{ query: ALL_BOOKS }, { query: ALL_AUTHORS }]
+    refetchQueries: ["ALL_BOOKS", "ALL_AUTHORS", "BOOKS_BY_GENRE"]
   });
+
   const token = window.localStorage.getItem("library-app-token");
 
   if (token === "" || token === null) {

@@ -1,16 +1,29 @@
 import React, { useState, useEffect } from "react";
 import { useLazyQuery } from "@apollo/client";
-import { useQuery, useApolloClient } from "@apollo/react-hooks";
+import {
+  useQuery,
+  useApolloClient,
+  useSubscription
+} from "@apollo/react-hooks";
 import Authors from "./components/Authors.jsx";
 import Books from "./components/Books.jsx";
 import NewBook from "./components/NewBook.jsx";
 import Login from "./components/Login.jsx";
 import Recommend from "./components/Recommend.jsx";
-import { USER_FAVORITE_GENRE } from "./queries";
+import { USER_FAVORITE_GENRE, BOOK_ADDED } from "./queries";
 
 const App = () => {
   const [page, setPage] = useState("authors");
   const [token, setToken] = useState(null);
+
+  useSubscription(BOOK_ADDED, {
+    onSubscriptionData: ({ subscriptionData }) => {
+      console.log(subscriptionData);
+      window.alert(
+        "new book was added:" + subscriptionData.data.bookAdded.title
+      );
+    }
+  });
 
   //get the token from local storage if it exists there
   useEffect(() => {

@@ -10,7 +10,7 @@ import Books from "./components/Books.jsx";
 import NewBook from "./components/NewBook.jsx";
 import Login from "./components/Login.jsx";
 import Recommend from "./components/Recommend.jsx";
-import { USER_FAVORITE_GENRE, BOOK_ADDED } from "./queries";
+import { BOOK_ADDED } from "./queries";
 
 const App = () => {
   const [page, setPage] = useState("authors");

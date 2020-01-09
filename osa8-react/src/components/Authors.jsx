@@ -3,7 +3,7 @@ import React from "react";
 import { useQuery } from "@apollo/react-hooks";
 
 import { ALL_AUTHORS } from "../queries";
-import BirthYear from "./BirthYear";
+import EditAuthor from "./EditAuthor";
 
 const Authors = props => {
   const { loading, data } = useQuery(ALL_AUTHORS);
@@ -35,7 +35,7 @@ const Authors = props => {
       </table>
 
       {props.token != null ? (
-        <BirthYear authors={authors}></BirthYear>
+        <EditAuthor authors={authors}></EditAuthor>
       ) : (
         <p> Log in to edit authors. </p>
       )}

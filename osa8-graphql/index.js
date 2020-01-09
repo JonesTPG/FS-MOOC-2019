@@ -79,7 +79,7 @@ const typeDefs = gql`
 const resolvers = {
   Query: {
     hello: () => {
-      return "world3324324";
+      return "world";
     },
     bookCount: () => Book.collection.countDocuments(),
     authorCount: () => Author.collection.countDocuments(),

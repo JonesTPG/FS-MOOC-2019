@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 
+import GenreButtons from "../components/GenreButtons";
+
 import { useQuery, useApolloClient } from "@apollo/react-hooks";
 import { useLazyQuery } from "@apollo/client";
 
@@ -12,20 +14,17 @@ const Books = props => {
   const [selectedGenre, setSelectedGenre] = useState(null);
   const books = data.allBooks;
 
-  const { data: genreData, loading: genreLoading, refetch } = useQuery(
-    ALL_GENRES
-  );
-  const [
-    getSpesificGenre,
-    { loading: spesificLoading, data: spesificData }
-  ] = useLazyQuery(BOOKS_BY_GENRE, {
-    client: client,
-    onCompleted: data => {
-      setGenreBooks(data.booksByGenre);
+  const [getSpesificGenre, { data: spesificData }] = useLazyQuery(
+    BOOKS_BY_GENRE,
+    {
+      client: client,
+      onCompleted: data => {
+        setGenreBooks(data.booksByGenre);
+      }
     }
-  });
+  );
 
-  const setGenre = genre => () => {
+  const setGenre = (genre, refetch) => () => {
     refetch({ variables: { genre: genre } });
     setSelectedGenre(genre);
     getSpesificGenre({ variables: { genre: genre } });
@@ -33,7 +32,7 @@ const Books = props => {
 
   if (!props.show) {
     return null;
-  } else if (loading || genreLoading) {
+  } else if (loading) {
     return <p>loading</p>;
   }
 
@@ -71,12 +70,7 @@ const Books = props => {
         </tbody>
       </table>
 
-      {genreData.allGenres.map(genre => (
-        <button key={genre} onClick={setGenre(genre)}>
-          {genre}
-        </button>
-      ))}
-      <button onClick={setGenre("")}>all genres</button>
+      <GenreButtons setGenre={setGenre}></GenreButtons>
     </div>
   );
 };
